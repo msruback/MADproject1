@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.matthew.project1.MainActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/addContact"
+        android:drawable="@*android:drawable/ic_menu_invite"
+        android:title="Add Contact"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/addCourse"
+        android:drawable="@*android:drawable/ic_menu_btn_add"
+        android:title="Add Course"
+        app:showAsAction="ifRoom"
+        />
+</menu>
