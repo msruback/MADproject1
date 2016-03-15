@@ -13,4 +13,5 @@ Extra
 
 Plan
 Main Activity shows all contacts, has two app bar buttons that allow users to add class via a dialog box, or class contacts via a new activity
-Users will be able to 
+Users will be able to also tap contacts(using general onclick for listview) to view an expanded view of that contact
+This expanded view will allow users to delete or edit the contact with icons on the app bar.
