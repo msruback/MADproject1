@@ -3,6 +3,7 @@ package com.example.matthew.project1;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putStringArray("courseNames",courseNames);
             intent.putExtras(bundle);
-            startActivity(intent);
+            startActivityForResult(intent,0);
         }
         if (id == R.id.addCourse){
             AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
@@ -76,5 +77,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent returnedIntent){
+        super.onActivityResult(requestCode,resultCode,returnedIntent);
+        switch(requestCode){
+            case 0:
+                Bundle returnedBundle = returnedIntent.getExtras();
+
+                Course courseList = user.getCourseList();
+
+                String courseName = returnedBundle.getString("courseName");
+                CourseContact newContact = new CourseContact();
+                newContact.setName(returnedBundle.getString("name"));
+                newContact.setEmail(returnedBundle.getString("email"));
+                newContact.setPhoto((Uri) returnedBundle.getParcelable("photo"));
+                while(courseList.getNext()!=null||!courseList.getCourseName().equals(courseName)){
+                    courseList = courseList.getNext();
+                    if(courseList.getCourseName().equals(courseName)){
+                        courseList.addCourseContact(newContact);
+                    }
+                }
+                break;
+        }
     }
 }
