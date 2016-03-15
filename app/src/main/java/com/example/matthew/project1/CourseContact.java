@@ -10,23 +10,18 @@ import android.os.Parcelable;
  */
 public class CourseContact implements Parcelable {
 
-    private String name,email;
+    private String name,email,course;
     private Uri photo;
     private CourseContact next;
 
     public CourseContact(){
-        name="head";
+        name=null;
         email=null;
         photo=null;
         next=null;
+        course=null;
     }
 
-    public CourseContact(String setName, String setEmail){
-        name = setName;
-        email = setEmail;
-        photo = null;
-        next = null;
-    }
 
     public String getName(){
         return name;
@@ -58,6 +53,14 @@ public class CourseContact implements Parcelable {
 
     public void setNext(CourseContact toSet){
         next = toSet;
+    }
+
+    public String getCourse(){
+        return course;
+    }
+
+    public void setCourse(String toSet){
+        course = toSet;
     }
 
     protected CourseContact(Parcel in) {

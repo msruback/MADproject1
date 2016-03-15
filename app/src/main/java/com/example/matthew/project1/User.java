@@ -8,59 +8,67 @@ import android.os.Parcelable;
  */
 public class User{
     private Course courseList;
-    private int length;
+    private CourseContact contactList;
+    private int courseLength,contactLength;
     public User(){
         courseList = new Course();
-        length = 0;
+        courseLength = 0;
+        contactList = new CourseContact();
+        contactLength = 0;
     }
     public void addCourse(String name){
         Course toAdd = new Course(name);
         toAdd.setNext(courseList.getNext());
         courseList.setNext(toAdd);
-        length+=1;
+        courseLength+=1;
     }
     public Course getCourseList(){
         return courseList;
     }
     public String[] getCourseNames(){
-        String[] toReturn = new String[length];
+        String[] toReturn = new String[courseLength];
         Course traverse = courseList.getNext();
-        for(int i=0;i<length;i++){
+        for(int i=0;i<courseLength;i++){
             toReturn[i] = traverse.getCourseName();
             traverse=traverse.getNext();
         }
         return toReturn;
     }
-    public String[] getContactNames(){
-        String [] toReturn, workingArray1, workingArray2;
-        toReturn = new String[0];
-        Course traverse = courseList.getNext();
-        for(int i=0;i<length;i++){
-            workingArray1=traverse.getContactNames();
-            workingArray2=toReturn;
-            toReturn=new String[workingArray1.length+workingArray2.length];
-            for(int j=0;j<toReturn.length;j++){
-                if(j<workingArray1.length-1){
-                    toReturn[j]=workingArray1[j];
-                }else{
-                    toReturn[j]=workingArray2[j-workingArray1.length];
-                }
+
+    public void addCourseContact(CourseContact toAdd){
+        toAdd.setNext(contactList.getNext());
+        contactList.setNext(toAdd);
+        return;
+    }
+    public void removeCourseContact(CourseContact toRemove){
+        while(contactList.getNext()!=null){
+            if(toRemove.equals(contactList.getNext())){
+                contactList.setNext(contactList.getNext().getNext());
+                return;
             }
+        }
+        return;
+    }
+    public CourseContact getContactList(){
+        return contactList;
+    }
+    public String[] getContactNames(){
+        String[] toReturn = new String[contactLength];
+        CourseContact traverse = contactList.getNext();
+        for(int i=0;i<contactLength;i++){
+            toReturn[i] = traverse.getName();
+            traverse=traverse.getNext();
         }
         return toReturn;
     }
     public CourseContact findContact(String name){
-        Course traverseCourse = courseList;
-        CourseContact traverseContact, returnContact = new CourseContact();
-        while(traverseCourse.getNext()!=null){
-            traverseCourse = courseList.getNext();
-            traverseContact = traverseCourse.getContactList();
-            while(traverseContact.getNext()!=null){
-                if(traverseContact.getName()==name){
-                    returnContact=traverseContact;
-                }
+        CourseContact returnContact, traverse = contactList.getNext();
+        for(int i=0;i<contactLength;i++){
+            if(traverse.getName().equals(name)){
+                return traverse;
             }
+            traverse=traverse.getNext();
         }
-        return returnContact;
+        return new CourseContact();
     }
 }

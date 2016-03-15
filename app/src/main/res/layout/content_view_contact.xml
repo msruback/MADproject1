@@ -33,4 +33,33 @@
         android:text="Email"
         android:id="@+id/emailTextView"
         android:layout_below="@id/nameTextView"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Course"
+        android:id="@+id/courseTextView"
+        android:layout_below="@id/emailTextView"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:id="@+id/editContact"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/cancelButton" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:id="@+id/deleteContact"
+        android:layout_alignTop="@+id/editContact"
+        android:layout_toEndOf="@+id/editContact" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back to List"
+        android:id="@+id/cancelButton"
+        android:layout_marginTop="199dp"
+        android:layout_below="@+id/courseTextView"
+        android:layout_toEndOf="@+id/deleteContact" />
 </RelativeLayout>

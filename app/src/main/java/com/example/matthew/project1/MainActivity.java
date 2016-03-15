@@ -14,11 +14,15 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     private User user;
+    private CourseContact editingContact;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +44,13 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
                 String itemValue = (String)contactList.getItemAtPosition(position);
                 CourseContact selectedContact = user.findContact(itemValue);
-                setContentView(R.layout.activity_view_course_contact);
-                //Figure out solution to view issue
+                Intent intent = new Intent(getApplicationContext(),AddCourseContact.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("contact",selectedContact);
+                bundle.putStringArray("courseNames",user.getCourseNames());
+                intent.putExtras(bundle);
+                startActivityForResult(intent,1);
+
             }
         });
     }
@@ -101,24 +110,28 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent returnedIntent){
         super.onActivityResult(requestCode,resultCode,returnedIntent);
-        switch(requestCode){
+        switch(requestCode) {
             case 0:
-                Bundle returnedBundle = returnedIntent.getExtras();
+                if (resultCode == RESULT_OK){
+                    Bundle returnedBundle = returnedIntent.getExtras();
 
-                Course courseList = user.getCourseList();
+                    CourseContact newContact = new CourseContact();
+                    newContact.setName(returnedBundle.getString("name"));
+                    newContact.setEmail(returnedBundle.getString("email"));
+                    newContact.setPhoto((Uri) returnedBundle.getParcelable("photo"));
+                    newContact.setCourse(returnedBundle.getString("courseName"));
+                    user.addCourseContact(newContact);
+                }
 
-                String courseName = returnedBundle.getString("courseName");
-                CourseContact newContact = new CourseContact();
-                newContact.setName(returnedBundle.getString("name"));
-                newContact.setEmail(returnedBundle.getString("email"));
-                newContact.setPhoto((Uri) returnedBundle.getParcelable("photo"));
-                while(courseList.getNext()!=null||!courseList.getCourseName().equals(courseName)){
-                    courseList = courseList.getNext();
-                    if(courseList.getCourseName().equals(courseName)){
-                        courseList.addCourseContact(newContact);
+                break;
+            case 1:
+                if(resultCode == RESULT_OK) {
+                    Bundle editBundle = returnedIntent.getExtras();
+                    user.removeCourseContact(editingContact);
+                    if(editBundle.getString("purpose").equals("edit")) {
+                        user.addCourseContact((CourseContact)editBundle.getParcelable("contact"));
                     }
                 }
-                break;
         }
     }
 }

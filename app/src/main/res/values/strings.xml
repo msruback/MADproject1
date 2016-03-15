@@ -4,4 +4,5 @@
     <string name="title_activity_add_course">Add Course</string>
     <string name="title_activity_add_course_contact">Add Course Contact</string>
     <string name="title_activity_view_course_contact">View Course Contact</string>
+    <string name="title_activity_view_contact">View Contact</string>
 </resources>

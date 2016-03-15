@@ -22,6 +22,10 @@
             android:name=".AddCourseContact"
             android:label="@string/title_activity_add_course_contact"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ViewContact"
+            android:label="@string/title_activity_view_contact"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -38,12 +38,18 @@ public class AddCourseContact extends AppCompatActivity {
         Button cancel = (Button)findViewById(R.id.cancelButton);
         final Spinner courseSpinner = (Spinner) findViewById(R.id.courseSpinner);
 
-        //Incoming course names
+        //Incoming stuff
         Intent callingIntent = this.getIntent();
         Bundle incomingBundle = callingIntent.getExtras();
         String[] courseNames=incomingBundle.getStringArray("courseNames");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, courseNames);
         courseSpinner.setAdapter(adapter);
+        if(incomingBundle.getString("purpose").equals("edit")){
+            nameEditText.setText(incomingBundle.getString("name"));
+            emailEditText.setText(incomingBundle.getString("email"));
+            contactPictureButton.setImageURI((Uri)incomingBundle.getParcelable("photo"));
+            courseSpinner.setSelection(adapter.getPosition(incomingBundle.getString("course")));
+        }
 
         //Event Listeners
         submit.setOnClickListener(new View.OnClickListener(){
