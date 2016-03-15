@@ -12,7 +12,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
     private User user;
@@ -24,6 +27,23 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         user = new User();
 
+        final ListView contactList = (ListView) findViewById(R.id.listView);
+
+        String[] contactArray = user.getContactNames();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,android.R.id.text1,contactArray);
+
+
+        contactList.setAdapter(adapter);
+
+        contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                String itemValue = (String)contactList.getItemAtPosition(position);
+                CourseContact selectedContact = user.findContact(itemValue);
+                setContentView(R.layout.activity_view_course_contact);
+                //Figure out solution to view issue
+            }
+        });
     }
 
     @Override

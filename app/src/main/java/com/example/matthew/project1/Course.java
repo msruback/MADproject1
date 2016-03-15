@@ -49,4 +49,16 @@ public class Course{
         }
         return;
     }
+    public CourseContact getContactList(){
+        return contactList;
+    }
+    public String[] getContactNames(){
+        String[] toReturn = new String[length];
+        CourseContact traverse = contactList.getNext();
+        for(int i=0;i<length;i++){
+            toReturn[i] = traverse.getName();
+            traverse=traverse.getNext();
+        }
+        return toReturn;
+    }
 }
