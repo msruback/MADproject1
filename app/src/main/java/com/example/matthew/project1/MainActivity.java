@@ -19,10 +19,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private User user;
     private CourseContact editingContact;
+    private ListView contactList;
+    private ArrayAdapter<String> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +34,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         user = new User();
 
-        final ListView contactList = (ListView) findViewById(R.id.listView);
+        contactList = (ListView) findViewById(R.id.listView);
 
         String[] contactArray = user.getContactNames();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,android.R.id.text1,contactArray);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,android.R.id.text1,contactArray);
 
 
         contactList.setAdapter(adapter);
@@ -77,32 +80,14 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AddCourseContact.class);
             String[] courseNames = user.getCourseNames();
             Bundle bundle = new Bundle();
+            bundle.putString("purpose","add");
             bundle.putStringArray("courseNames",courseNames);
             intent.putExtras(bundle);
             startActivityForResult(intent,0);
         }
         if (id == R.id.addCourse){
-            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-            builder.setTitle("Add Class");
-            View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.text_input_classname,(ViewGroup) this.findViewById(android.R.id.content),false);
-            final EditText input = (EditText) dialogView.findViewById(R.id.input);
-            builder.setView(dialogView);
-
-            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    user.addCourse(input.getText().toString());
-                }
-            });
-            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-
-            builder.show();
+            Intent intent = new Intent(this,AddClass.class);
+            startActivityForResult(intent,2);
         }
 
         return super.onOptionsItemSelected(item);
@@ -120,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
                     newContact.setEmail(returnedBundle.getString("email"));
                     newContact.setPhoto((Uri) returnedBundle.getParcelable("photo"));
                     newContact.setCourse(returnedBundle.getString("courseName"));
+                    Toast.makeText(this,"lol",Toast.LENGTH_LONG);
                     user.addCourseContact(newContact);
+                    adapter.notifyDataSetChanged();
                 }
 
                 break;
@@ -131,6 +118,13 @@ public class MainActivity extends AppCompatActivity {
                     if(editBundle.getString("purpose").equals("edit")) {
                         user.addCourseContact((CourseContact)editBundle.getParcelable("contact"));
                     }
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+            case 2:
+                if(resultCode == RESULT_OK){
+                    Bundle returnedBundle = returnedIntent.getExtras();
+                    user.addCourse(returnedBundle.getString("course"));
                 }
         }
     }

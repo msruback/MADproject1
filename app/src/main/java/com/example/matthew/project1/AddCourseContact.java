@@ -21,6 +21,7 @@ import android.widget.Spinner;
 
 public class AddCourseContact extends AppCompatActivity {
 
+    private EditText nameEditText,emailEditText;
     private Uri contactPicture;
     private ImageButton contactPictureButton;
     @Override
@@ -31,8 +32,8 @@ public class AddCourseContact extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //Handling content
-        final EditText nameEditText = (EditText)findViewById(R.id.nameEditText);
-        final EditText emailEditText = (EditText)findViewById(R.id.emailEditText);
+        nameEditText = (EditText)findViewById(R.id.nameEditText);
+        emailEditText = (EditText)findViewById(R.id.emailEditText);
         contactPictureButton = (ImageButton)findViewById(R.id.contactPicture);
         Button submit = (Button)findViewById(R.id.submitButton);
         Button cancel = (Button)findViewById(R.id.cancelButton);
@@ -82,26 +83,7 @@ public class AddCourseContact extends AppCompatActivity {
         contactPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                builder.setTitle("Add Photo");
-
-                builder.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(takePicture,0);
-                    }
-                });
-                builder.setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(pickPhoto,1);
-                    }
-                });
-                builder.show();
+                openPhotoDialog(v);
             }
         });
     }
@@ -124,6 +106,30 @@ public class AddCourseContact extends AppCompatActivity {
                 break;
         }
 
+    }
+
+    public void openPhotoDialog(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add Photo");
+
+        builder.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(takePicture, 0);
+            }
+        });
+        builder.setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto, 1);
+            }
+        });
+        AlertDialog photoDialog = builder.create();
+        photoDialog.show();
     }
 
 }
