@@ -26,20 +26,16 @@ public class ViewContact extends AppCompatActivity {
         final TextView nameTextView = (TextView)findViewById(R.id.nameTextView);
         final TextView emailTextView = (TextView)findViewById(R.id.emailTextView);
         final TextView courseTextView = (TextView)findViewById(R.id.courseTextView);
-        final ImageView photoImageView = (ImageView)findViewById(R.id.contactPicture);
         Button edit = (Button)findViewById(R.id.editContact);
         Button delete = (Button)findViewById(R.id.deleteContact);
         Button cancel = (Button)findViewById(R.id.cancelButton);
 
         Intent callingIntent = this.getIntent();
         Bundle incomingBundle = callingIntent.getExtras();
-        CourseContact contact = incomingBundle.getParcelable("contact");
         final String[] courseNames = incomingBundle.getStringArray("courseNames");
-        nameTextView.setText(contact.getName());
-        emailTextView.setText(contact.getEmail());
-        courseTextView.setText(contact.getCourse());
-        photoImageView.setImageURI(contact.getPhoto());
-        final Uri photo = contact.getPhoto();
+        nameTextView.setText(incomingBundle.getString("name"));
+        emailTextView.setText(incomingBundle.getString("email"));
+        courseTextView.setText(incomingBundle.getString("course"));
 
         edit.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -50,7 +46,6 @@ public class ViewContact extends AppCompatActivity {
                 bundle.putString("name",nameTextView.getText().toString());
                 bundle.putString("email",emailTextView.getText().toString());
                 bundle.putString("course",courseTextView.getText().toString());
-                bundle.putParcelable("photo", photo);
                 bundle.putStringArray("courseNames",courseNames);
 
                 intent.putExtras(bundle);
@@ -85,17 +80,9 @@ public class ViewContact extends AppCompatActivity {
             case 0:
                 Bundle returnedBundle = returnedIntent.getExtras();
 
-                CourseContact newContact = new CourseContact();
-                newContact.setName(returnedBundle.getString("name"));
-                newContact.setEmail(returnedBundle.getString("email"));
-                newContact.setPhoto((Uri) returnedBundle.getParcelable("photo"));
-                newContact.setCourse(returnedBundle.getString("courseName"));
-
                 Intent returnIntent = new Intent();
-                Bundle returnBundle = new Bundle();
-                returnBundle.putString("purpose","edit");
-                returnBundle.putParcelable("contact",newContact);
-                returnIntent.putExtras(returnBundle);
+                returnedBundle.putString("purpose", "edit");
+                returnIntent.putExtras(returnedBundle);
 
                 setResult(RESULT_OK,returnIntent);
                 finish();

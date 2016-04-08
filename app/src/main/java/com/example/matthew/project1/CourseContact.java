@@ -1,5 +1,6 @@
 package com.example.matthew.project1;
 
+import android.graphics.Bitmap;
 import android.graphics.Path;
 import android.net.Uri;
 import android.os.Parcel;
@@ -11,13 +12,11 @@ import android.os.Parcelable;
 public class CourseContact implements Parcelable {
 
     private String name,email,course;
-    private Uri photo;
     private CourseContact next;
 
     public CourseContact(){
         name=null;
         email=null;
-        photo=null;
         next=null;
         course=null;
     }
@@ -39,13 +38,6 @@ public class CourseContact implements Parcelable {
         email = toSet;
     }
 
-    public Uri getPhoto(){
-        return photo;
-    }
-
-    public void setPhoto(Uri toSet){
-        photo = toSet;
-    }
 
     public CourseContact getNext(){
         return next;
@@ -66,7 +58,6 @@ public class CourseContact implements Parcelable {
     protected CourseContact(Parcel in) {
         name = in.readString();
         email = in.readString();
-        photo = (Uri) in.readParcelable(Uri.class.getClassLoader());
     }
 
     public static final Creator<CourseContact> CREATOR = new Creator<CourseContact>() {
@@ -90,6 +81,5 @@ public class CourseContact implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(email);
-        dest.writeParcelable(photo, 0);
     }
 }

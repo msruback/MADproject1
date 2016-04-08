@@ -3,6 +3,7 @@ package com.example.matthew.project1;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,11 +22,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private User user;
     private CourseContact editingContact;
     private ListView contactList;
-    private ArrayAdapter<String> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,27 +39,29 @@ public class MainActivity extends AppCompatActivity {
         contactList = (ListView) findViewById(R.id.listView);
 
         String[] contactArray = user.getContactNames();
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,android.R.id.text1,contactArray);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,android.R.id.text1,contactArray);
 
 
         contactList.setAdapter(adapter);
 
         contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                String itemValue = (String)contactList.getItemAtPosition(position);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String itemValue = (String) contactList.getItemAtPosition(position);
                 CourseContact selectedContact = user.findContact(itemValue);
-                Intent intent = new Intent(getApplicationContext(),AddCourseContact.class);
+                editingContact = selectedContact;
+                Intent intent = new Intent(getApplicationContext(), ViewContact.class);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("contact",selectedContact);
-                bundle.putStringArray("courseNames",user.getCourseNames());
+                bundle.putString("name",selectedContact.getName());
+                bundle.putString("email",selectedContact.getEmail());
+                bundle.putString("course",selectedContact.getCourse());
+                bundle.putStringArray("courseNames", user.getCourseNames());
                 intent.putExtras(bundle);
-                startActivityForResult(intent,1);
+                startActivityForResult(intent, 1);
 
             }
         });
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -103,22 +107,31 @@ public class MainActivity extends AppCompatActivity {
                     CourseContact newContact = new CourseContact();
                     newContact.setName(returnedBundle.getString("name"));
                     newContact.setEmail(returnedBundle.getString("email"));
-                    newContact.setPhoto((Uri) returnedBundle.getParcelable("photo"));
                     newContact.setCourse(returnedBundle.getString("courseName"));
-                    Toast.makeText(this,"lol",Toast.LENGTH_LONG);
                     user.addCourseContact(newContact);
-                    adapter.notifyDataSetChanged();
+                    String[] contactArray = user.getContactNames();
+                    ListView updateList = (ListView)findViewById(R.id.listView);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,android.R.id.text1,contactArray);
+                    updateList.setAdapter(adapter);
                 }
 
                 break;
             case 1:
                 if(resultCode == RESULT_OK) {
-                    Bundle editBundle = returnedIntent.getExtras();
+                    Bundle returnedBundle = returnedIntent.getExtras();
                     user.removeCourseContact(editingContact);
-                    if(editBundle.getString("purpose").equals("edit")) {
-                        user.addCourseContact((CourseContact)editBundle.getParcelable("contact"));
+                    if(returnedBundle.getString("purpose").equals("edit")) {
+                        CourseContact newContact = new CourseContact();
+                        newContact.setName(returnedBundle.getString("name"));
+                        newContact.setEmail(returnedBundle.getString("email"));
+                        newContact.setCourse(returnedBundle.getString("courseName"));
+                        user.addCourseContact(newContact);
                     }
-                    adapter.notifyDataSetChanged();
+
+                    String[] contactArray = user.getContactNames();
+                    ListView updateList = (ListView)findViewById(R.id.listView);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,android.R.id.text1,contactArray);
+                    updateList.setAdapter(adapter);
                 }
                 break;
             case 2:

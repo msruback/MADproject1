@@ -38,12 +38,14 @@ public class User{
     public void addCourseContact(CourseContact toAdd){
         toAdd.setNext(contactList.getNext());
         contactList.setNext(toAdd);
+        contactLength+=1;
         return;
     }
     public void removeCourseContact(CourseContact toRemove){
         while(contactList.getNext()!=null){
             if(toRemove.equals(contactList.getNext())){
                 contactList.setNext(contactList.getNext().getNext());
+                contactLength-=1;
                 return;
             }
         }
